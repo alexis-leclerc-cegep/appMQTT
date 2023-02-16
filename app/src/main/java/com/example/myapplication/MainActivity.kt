@@ -59,33 +59,34 @@ class MainActivity : AppCompatActivity() {
             val topic = "alexis/co2"
             val topic2 = "alexis/tvoc"
             snackbarMsg = "Cannot subscribe to empty topic!"
-            snackbarMsg = try {
-                mqttClient.subscribe(topic)
-                mqttClient.subscribe(topic2)
-                "Subscribed to topic '$topic'"
-            } catch (ex: MqttException) {
-                "Error subscribing to topic: $topic"
+            if(mqttClient.isConnected()){
+                snackbarMsg = try {
+                    mqttClient.subscribe(topic)
+                    mqttClient.subscribe(topic2)
+                    "Subscribed to topic '$topic'"
+                } catch (ex: MqttException) {
+                    "Error subscribing to topic: $topic"
+                }
+            }
+            else{
+                snackbarMsg = "Not connected to broker, try again"
             }
             Snackbar.make(view, snackbarMsg, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()
         }
 
-        /*
         Timer("CheckMqttConnection", false).schedule(3000) {
             if (!mqttClient.isConnected()) {
-                Snackbar.make(textViewNumMsgs, "Failed to connect to: '$SOLACE_MQTT_HOST' within 3 seconds", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(findViewById(android.R.id.content), "Failed to connect to: '$SOLACE_MQTT_HOST' within 3 seconds", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Action", null).show()
             }
         }
-
-         */
 
     }
 
 
     private fun setMqttCallBack() {
         mqttClient.setCallback(object : MqttCallbackExtended {
-            @Throws(Exception::class)
             override fun connectComplete(b: Boolean, s: String) {
                 val snackbarMsg = "Connected to host:\n'$SOLACE_MQTT_HOST'."
                 Log.w("Debug", snackbarMsg)
