@@ -8,7 +8,7 @@ package com.example.myapplication
 // https://console.solace.cloud/services/ -> <your-service> -> 'Connect' -> 'MQTT'
 const val SOLACE_CLIENT_USER_NAME = "chepo"
 const val SOLACE_CLIENT_PASSWORD = "chepo"
-const val SOLACE_MQTT_HOST = "tcp://172.16.5.101:1883"
+val SOLACE_MQTT_HOST = ""
 
 // Other options
 const val SOLACE_CONNECTION_TIMEOUT = 3

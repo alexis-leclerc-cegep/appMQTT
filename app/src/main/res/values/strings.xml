@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">MQTT</string>
     <string name="action_settings">Settings</string>
     <string name="messages_received">Rx:</string>
     <string name="publish_to_topic">Publish to topic</string>

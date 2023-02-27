@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -10,48 +9,42 @@ import com.example.myapplication.mqtt.MqttClientHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import okhttp3.*
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import java.io.IOException
 import java.util.*
 import kotlin.concurrent.schedule
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
+
 
     private val mqttClient by lazy {
         MqttClientHelper(this)
     }
 
+
+    private val client = OkHttpClient()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        textViewCO2.movementMethod = ScrollingMovementMethod()
+
+
+        var url: String = "http://192.168.104.152:8000"
+
+
+        run(url)
+
+
 
         setMqttCallBack()
 
-        // initialize 'num msgs received' field in the view
 
-
-        /*
-        // pub button
-        btnPub.setOnClickListener { view ->
-            var snackbarMsg : String
-            val topic = editTextPubTopic.text.toString().trim()
-            snackbarMsg = "Cannot publish to empty topic!"
-            if (topic.isNotEmpty()) {
-                snackbarMsg = try {
-                    "Published to topic '$topic'"
-                } catch (ex: MqttException) {
-                    "Error publishing to topic: $topic"
-                }
-            }
-            Snackbar.make(view, snackbarMsg, 300)
-                .setAction("Action", null).show()
-
-        }*/
 
         // sub button
         btnSub.setOnClickListener { view ->
@@ -82,6 +75,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun run(url: String) {
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("failure")
+            }
+            override fun onResponse(call: Call, response: Response) {
+                println(response.body()?.string())
+            }
+
+        })
     }
 
 
