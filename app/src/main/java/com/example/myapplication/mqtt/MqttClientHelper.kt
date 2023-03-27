@@ -15,7 +15,7 @@ class MqttClientHelper(context: Context?) {
     }
 
     var mqttAndroidClient: MqttAndroidClient
-    val serverUri: String = ""
+    val serverUri: String = SOLACE_MQTT_HOST
     private val clientId: String = MqttClient.generateClientId()
 
     fun setCallback(callback: MqttCallbackExtended?) {

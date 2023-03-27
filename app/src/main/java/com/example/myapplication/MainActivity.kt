@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.json.JSONObject
 import java.io.IOException
 import java.util.*
 import kotlin.concurrent.schedule
@@ -34,17 +35,9 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        val API_URL: String = "http://172.16.6.112:6969"
 
-        var url: String = "http://192.168.104.152:8000"
-
-
-        run(url)
-
-
-
-        setMqttCallBack()
-
-
+        getIP("$API_URL/brokerIp")
 
         // sub button
         btnSub.setOnClickListener { view ->
@@ -77,17 +70,52 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    fun run(url: String) {
+    private fun changeBrokerIP(ip: String){
+        SOLACE_MQTT_HOST = "tcp://$ip"
+        println("joe")
+        println(SOLACE_MQTT_HOST)
+
+        setMqttCallBack()
+    }
+
+    private fun getIP(url: String){
         val request = Request.Builder()
             .url(url)
             .build()
+
+        var reponse: String = "pasteur"
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("failure")
+                println("failure")
+                println("failure")
+                println("failure")
+                println("failure")
+                println("failure")
+            }
+            override fun onResponse(call: Call, response: Response) {
+                val obj = JSONObject(response.body()?.string())
+                println("la reponse")
+                reponse = obj.getString("ip")
+                changeBrokerIP(reponse)
+            }
+        })
+    }
+
+    fun run(url: String){
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        val reponse: String
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 println("failure")
             }
             override fun onResponse(call: Call, response: Response) {
-                println(response.body()?.string())
+
             }
 
         })
