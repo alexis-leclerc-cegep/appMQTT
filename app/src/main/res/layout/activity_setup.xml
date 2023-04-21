@@ -76,4 +76,13 @@
         tools:layout_editor_absoluteX="515dp"
         tools:layout_editor_absoluteY="485dp" />
 
+    <Button
+        android:id="@+id/btnEnregistrer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enregistrer"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="996dp"
+        tools:layout_editor_absoluteY="650dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
