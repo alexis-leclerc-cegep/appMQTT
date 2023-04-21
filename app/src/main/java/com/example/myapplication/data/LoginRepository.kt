@@ -38,6 +38,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
+    /*
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
         Log.w("HTTP", "Trying to login")
@@ -50,32 +51,28 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
         val json = "{\"username\": \"$username\", \"password\": \"$password\"}"
 
-        val result: Result<LoggedInUser> = try{
-            var loggedInUser: LoggedInUser? = null
-            httpHelper.run("$API_URL$route", json) { responseBody ->
-                if (responseBody != null) {
-                    Log.w("HTTP", responseBody)
-                    val json = JSONObject(responseBody)
-                    val token = json.optString("token", "")
-                    if(token.isNotEmpty()) {
-                        Log.w("HTTP", token)
-                        loggedInUser = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
-                    }
+        //var result: Result<LoggedInUser> = Result.Error(IOException("Error logging in"))
+
+        httpHelper.run("$API_URL$route", json) { responseBody ->
+            if (responseBody != null) {
+                Log.w("HTTP", responseBody)
+                val json = JSONObject(responseBody)
+                val token = json.optString("token", "")
+                if (token.isNotEmpty()) {
+                    Log.w("HTTP", token)
+                    val loggedInUser = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
+                    val result = Result.Success(loggedInUser)
+                } else {
+                    val result = Result.Error(IOException("Error logging in"))
                 }
-            }
-            if (loggedInUser != null) {
-                Result.Success(loggedInUser!!)
             } else {
-                Result.Error(IOException("Error logging in"))
+                val result = Result.Error(IOException("Error logging in"))
             }
-        } catch (e: Exception) {
-            e.message?.let { Log.w("ERROR", it) }
-            Result.Error(e)
         }
 
-        return result
-
     }
+
+     */
 
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {

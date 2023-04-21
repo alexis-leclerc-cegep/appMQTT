@@ -2,14 +2,20 @@ package com.example.myapplication.ui.login
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import com.example.myapplication.HTTPHelper
 import com.example.myapplication.data.LoginRepository
 import com.example.myapplication.data.Result
 
 import com.example.myapplication.R
+import com.example.myapplication.data.model.LoggedInUser
+import org.json.JSONObject
+import java.io.IOException
+import java.util.UUID
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -19,24 +25,47 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String, applicationContext: Context) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
 
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-                val context : Context = LoginActivity().getContextOfApplication()
+        Log.w("HTTP", "Trying to login")
+        val httpHelper = HTTPHelper()
 
-                val sharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val API_URL: String = "http://172.16.6.110:6969"
+        val route : String = "/login"
 
-                val editor = sharedPreferences.edit()
-                editor.putString("token", result.data.token)
-                editor.apply()
+        val token: String
 
-                //val sharedPreferences = getApplicationContext().getSharedPreferences("MySharedPref", MODE_PRIVATE)
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+        val json = "{\"username\": \"$username\", \"password\": \"$password\"}"
+
+        //var result: Result<LoggedInUser> = Result.Error(IOException("Error logging in"))
+
+        httpHelper.run("$API_URL$route", json) { responseBody ->
+            if (responseBody != null) {
+                Log.w("HTTP", responseBody)
+                val json = JSONObject(responseBody)
+                val token = json.optString("token", "")
+                if (token.isNotEmpty()) {
+                    Log.w("HTTP", token)
+                    val loggedInUser = LoggedInUser(UUID.randomUUID().toString(), username, token)
+                    val result = Result.Success(loggedInUser)
+                    _loginResult.postValue( LoginResult(success = LoggedInUserView(displayName = result.data.displayName)))
+
+                    val context = applicationContext
+
+                    val sharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+
+                    val editor = sharedPreferences.edit()
+                    Log.w("AndroidRuntime", result.data.token)
+
+                    editor.putString("token", result.data.token)
+                    editor.apply()
+                } else {
+                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                }
+            } else {
+                _loginResult.postValue(LoginResult(error = R.string.login_failed))
+            }
         }
     }
 

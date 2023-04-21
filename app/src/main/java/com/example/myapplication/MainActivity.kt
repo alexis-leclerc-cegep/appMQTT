@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -33,10 +34,14 @@ class MainActivity : AppCompatActivity(){
     private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPreferences : SharedPreferences= getSharedPreferences("sharedPrefs", MODE_PRIVATE)
+        if(sharedPreferences.getString("token", null) == null){
+            Log.w("AndroidRuntime", "Token null, starting login")
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        //setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         val API_URL: String = "http://172.16.6.112:6969"
