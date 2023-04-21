@@ -92,11 +92,6 @@ class MainActivity : AppCompatActivity(){
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 println("failure")
-                println("failure")
-                println("failure")
-                println("failure")
-                println("failure")
-                println("failure")
             }
             override fun onResponse(call: Call, response: Response) {
                 val obj = JSONObject(response.body()?.string())

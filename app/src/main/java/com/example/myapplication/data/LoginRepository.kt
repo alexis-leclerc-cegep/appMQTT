@@ -1,6 +1,17 @@
 package com.example.myapplication.data
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.example.myapplication.data.model.LoggedInUser
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
+
+import com.example.myapplication.HTTPHelper
+import org.json.JSONObject
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -29,14 +40,43 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
-        val result = dataSource.login(username, password)
+        Log.w("HTTP", "Trying to login")
+        val httpHelper = HTTPHelper()
 
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
+        val API_URL: String = "http://172.16.6.110:6969"
+        val route : String = "/login"
+
+        val token: String
+
+        val json = "{\"username\": \"$username\", \"password\": \"$password\"}"
+
+        val result: Result<LoggedInUser> = try{
+            var loggedInUser: LoggedInUser? = null
+            httpHelper.run("$API_URL$route", json) { responseBody ->
+                if (responseBody != null) {
+                    Log.w("HTTP", responseBody)
+                    val json = JSONObject(responseBody)
+                    val token = json.optString("token", "")
+                    if(token.isNotEmpty()) {
+                        Log.w("HTTP", token)
+                        loggedInUser = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
+                    }
+                }
+            }
+            if (loggedInUser != null) {
+                Result.Success(loggedInUser!!)
+            } else {
+                Result.Error(IOException("Error logging in"))
+            }
+        } catch (e: Exception) {
+            e.message?.let { Log.w("ERROR", it) }
+            Result.Error(e)
         }
 
         return result
+
     }
+
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.user = loggedInUser

@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +26,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         if (result is Result.Success) {
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                val context : Context = LoginActivity().getContextOfApplication()
+
+                val sharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+
+                val editor = sharedPreferences.edit()
+                editor.putString("token", result.data.token)
+                editor.apply()
+
+                //val sharedPreferences = getApplicationContext().getSharedPreferences("MySharedPref", MODE_PRIVATE)
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
@@ -50,6 +61,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return password.length >= 3
     }
 }
