@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val API_URL: String = "http://172.16.6.112:6969"
+        val API_URL: String = "http://172.16.6.110:6969"
 
         getIP("$API_URL/brokerIp")
 
@@ -88,8 +88,14 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun getIP(url: String){
+        val sharedPreferences : SharedPreferences= getSharedPreferences("sharedPrefs", MODE_PRIVATE)
+        val token : String? = sharedPreferences.getString("token", null)
+
+        Log.i("HTTP", "getting ip")
+
         val request = Request.Builder()
             .url(url)
+            .header("Authorization", "Bearer $token")
             .build()
 
         var reponse: String = "pasteur"
