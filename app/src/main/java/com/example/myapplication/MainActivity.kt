@@ -32,8 +32,11 @@ class MainActivity : AppCompatActivity(){
         MqttClientHelper(this)
     }
 
-    private var seuilCo2 : Int = 1000
-    private var seuilTVOC : Int = 60
+    private var seuilMoyenCO2 : Int = 1000
+    private var seuilDangereuxCO2 : Int = 2000
+    private var seuilMoyenTVOC : Int = 220
+    private var seuilDangereuxTVOC : Int = 660
+
 
     private val client = OkHttpClient()
 
@@ -47,13 +50,6 @@ class MainActivity : AppCompatActivity(){
             //TODO:: check if token is still valid
         }
 
-        if(sharedPreferences.getString("seuilCO2", null) != null){
-            seuilCo2 = sharedPreferences.getString("seuilCO2", null)!!.toInt()
-        }
-
-        if(sharedPreferences.getString("seuilTVOC", null) != null){
-            seuilTVOC = sharedPreferences.getString("seuilTVOC", null)!!.toInt()
-        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -126,7 +122,7 @@ class MainActivity : AppCompatActivity(){
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                println("failure")
+                Log.w("HTTP", "failure")
             }
             override fun onResponse(call: Call, response: Response) {
                 val obj = JSONObject(response.body()?.string())
@@ -137,23 +133,6 @@ class MainActivity : AppCompatActivity(){
         })
     }
 
-    fun run(url: String){
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        val reponse: String
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                println("failure")
-            }
-            override fun onResponse(call: Call, response: Response) {
-
-            }
-
-        })
-    }
 
 
     private fun setMqttCallBack() {
@@ -185,8 +164,11 @@ class MainActivity : AppCompatActivity(){
 
             fun displayCO2(co2: String){
                 textViewCO2.text = "$co2 ppm"
-                if(co2.toInt() > seuilCo2){
+                if(co2.toInt() > seuilDangereuxCO2){
                     textViewCO2.setTextColor(Color.RED)
+                }
+                else if(co2.toInt() > seuilMoyenCO2){
+                    textViewCO2.setTextColor(Color.YELLOW)
                 }
                 else{
                     textViewCO2.setTextColor(Color.GREEN)
@@ -195,8 +177,11 @@ class MainActivity : AppCompatActivity(){
 
             fun displayTVOC(tvoc: String){
                 textViewTVOC.text = "$tvoc ppm"
-                if(tvoc.toInt() > seuilTVOC){
+                if(tvoc.toInt() > seuilDangereuxTVOC){
                     textViewTVOC.setTextColor(Color.RED)
+                }
+                else if(tvoc.toInt() > seuilMoyenTVOC){
+                    textViewTVOC.setTextColor(Color.YELLOW)
                 }
                 else{
                     textViewTVOC.setTextColor(Color.GREEN)
