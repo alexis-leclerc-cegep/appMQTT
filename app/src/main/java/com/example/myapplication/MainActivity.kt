@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(){
             .header("Authorization", "Bearer $token")
             .build()
 
-        var reponse: String = "pasteur"
+        var reponse: String = ""
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -126,9 +126,17 @@ class MainActivity : AppCompatActivity(){
             }
             override fun onResponse(call: Call, response: Response) {
                 val obj = JSONObject(response.body()?.string())
+                Log.w("HTTP", obj.toString())
                 println("la reponse")
-                reponse = obj.getString("ip")
-                changeBrokerIP(reponse)
+                if(obj.has("ip")){
+                    reponse = obj.getString("ip")
+                    changeBrokerIP(reponse)
+                }else{
+                    Log.w("HTTP", "no ip")
+                    Log.w("AndroidRuntime", "Token invalid, starting login")
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                }
             }
         })
     }
