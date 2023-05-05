@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MQTT</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="messages_received">Rx :</string>
+    <string name="publish_to_topic">Publier sur le topic</string>
+    <string name="publish">Publier</string>
+    <string name="start">Démarrer</string>
+    <string name="subscribe_to_topic">S\'abonner au topic</string>
+    <string name="message_payload">Contenu du message</string>
+    <string name="heading_msg_payload"><u>Contenu des messages reçus</u></string>
+    <string name="title_activity_login">Activité de connexion</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Nom d\'utilisateur</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="welcome">"Bienvenue !"</string>
+    <string name="invalid_username">Nom d\'utilisateur invalide</string>
+    <string name="invalid_password">Le mot de passe doit comporter plus de 2 caractères</string>
+    <string name="alert">Signaler alerte</string>
+    <string name="login_failed">"Échec de la connexion"</string>
+</resources>

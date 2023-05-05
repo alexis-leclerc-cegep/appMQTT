@@ -4,7 +4,7 @@
     <string name="messages_received">Rx:</string>
     <string name="publish_to_topic">Publish to topic</string>
     <string name="publish">Publish</string>
-    <string name="start">Démarrage</string>
+    <string name="start">Start</string>
     <string name="subscribe_to_topic">Subscribe to topic</string>
     <string name="message_payload">Message payload</string>
     <string name="heading_msg_payload"><u>Received Message payloads</u></string>
@@ -17,6 +17,6 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be > 2 characters</string>
-    <string name="alert">Signaler alerte</string>
+    <string name="alert">Notify</string>
     <string name="login_failed">"Login failed"</string>
 </resources>
