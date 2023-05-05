@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">MQTT</string>
+    <string name="action_settings">Настройки</string>
+    <string name="messages_received">Rx :</string>
+    <string name="publish_to_topic">Опубликовать на теме</string>
+    <string name="publish">Опубликовать</string>
+    <string name="start">Старт</string>
+    <string name="subscribe_to_topic">Подписаться на тему</string>
+    <string name="message_payload">Содержание сообщения</string>
+    <string name="heading_msg_payload"><u>Содержание полученных сообщений</u></string>
+    <string name="title_activity_login">Активность входа в систему</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Имя пользователя</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="invalid_username">Некорректное имя пользователя</string>
+    <string name="invalid_password">Пароль должен содержать не менее 2 символов</string>
+    <string name="alert">Сигнальное предупреждение</string>
+    <string name="login_failed">Ошибка входа в систему</string>
+</resources>
