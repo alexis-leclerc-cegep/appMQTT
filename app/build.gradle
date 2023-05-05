@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "com.example.myapplication"
+        applicationId "com.alexis.mqtt"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
