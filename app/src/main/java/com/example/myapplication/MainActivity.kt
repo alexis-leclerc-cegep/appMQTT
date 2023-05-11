@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(){
                 .setAction("Action", null).show()
         }
 
+
         btnAlerte.setOnTouchListener { v, event ->
             if (event.action == android.view.MotionEvent.ACTION_DOWN) {
                 mqttClient.publish("alexis/lumiere", "1")
@@ -208,9 +209,13 @@ class MainActivity : AppCompatActivity(){
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.action_settings -> {
+                val intent = Intent(this@MainActivity, SetupActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 

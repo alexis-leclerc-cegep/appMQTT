@@ -10,10 +10,13 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="104dp"
         android:text="@string/language"
         android:textSize="48sp"
-        tools:layout_editor_absoluteX="73dp"
-        tools:layout_editor_absoluteY="84dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinner"
