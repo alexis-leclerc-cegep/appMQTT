@@ -20,4 +20,5 @@
     <string name="invalid_password">Le mot de passe doit comporter plus de 2 caractères</string>
     <string name="alert">Signaler alerte</string>
     <string name="login_failed">"Échec de la connexion"</string>
+    <string name="language">Langage</string>
 </resources>
