@@ -47,9 +47,7 @@ class MainActivity : AppCompatActivity(){
             Log.w("AndroidRuntime", "Token null, starting login")
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-            //TODO:: check if token is still valid
         }
-
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -69,13 +67,13 @@ class MainActivity : AppCompatActivity(){
                 snackbarMsg = try {
                     mqttClient.subscribe(topic)
                     mqttClient.subscribe(topic2)
-                    "Subscribed to topic '$topic'"
+                    getString(R.string.subscribed) + " : '$topic'"
                 } catch (ex: MqttException) {
-                    "Error subscribing to topic: $topic"
+                    "Erreur " + getString(R.string.subscribed) + " : '$topic'"
                 }
             }
             else{
-                snackbarMsg = "Not connected to broker, try again"
+                snackbarMsg = getString(R.string.not_connected)
             }
             Snackbar.make(view, snackbarMsg, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()
@@ -93,11 +91,12 @@ class MainActivity : AppCompatActivity(){
 
         Timer("CheckMqttConnection", false).schedule(3000) {
             if (!mqttClient.isConnected()) {
-                Snackbar.make(findViewById(android.R.id.content), "Failed to connect to: '$SOLACE_MQTT_HOST' within 3 seconds", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.connection_failure)+" to: '$SOLACE_MQTT_HOST' within 3 seconds", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Action", null).show()
             }
         }
 
+        Log.i("debug", "created")
     }
 
     private fun changeBrokerIP(ip: String){
@@ -147,20 +146,19 @@ class MainActivity : AppCompatActivity(){
     private fun setMqttCallBack() {
         mqttClient.setCallback(object : MqttCallbackExtended {
             override fun connectComplete(b: Boolean, s: String) {
-                val snackbarMsg = "Connected to host:\n'$SOLACE_MQTT_HOST'."
+
+                val snackbarMsg =getString(R.string.connected)+  " : $SOLACE_MQTT_HOST'."
                 Log.w("Debug", snackbarMsg)
                 Snackbar.make(findViewById(android.R.id.content), snackbarMsg, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             }
             override fun connectionLost(throwable: Throwable) {
-                val snackbarMsg = "Connection to host lost:\n'$SOLACE_MQTT_HOST'"
-                Log.w("Debug", snackbarMsg)
+                val snackbarMsg = getString(R.string.connection_lost) + " : '$SOLACE_MQTT_HOST'"
                 Snackbar.make(findViewById(android.R.id.content), snackbarMsg, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             }
             @Throws(Exception::class)
             override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
-                Log.w("Debug", "Message received from host '$SOLACE_MQTT_HOST': $mqttMessage")
                 when (topic){
                     "alexis/co2" -> displayCO2(mqttMessage.toString())
                     "alexis/tvoc" -> displayTVOC(mqttMessage.toString())
@@ -168,7 +166,6 @@ class MainActivity : AppCompatActivity(){
             }
 
             override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {
-                Log.w("Debug", "Message published to host '$SOLACE_MQTT_HOST'")
             }
 
             fun displayCO2(co2: String){
